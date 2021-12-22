@@ -3,7 +3,7 @@
 UrlTok has two features: filter TikTok urls from HTML elements and mass convert tiktok video urls directly on your device in HD without watermark.
 
 ## 🎉 Features
-- Filter TikTok urls directly from a HTML Element.
+- Filter TikTok urls directly from an HTML Element.
 - Mass convert TikTok video urls directly on your device, in HD and without watermark.
 
 [![Url-Tok_p94qLttnmC.png](https://s10.gifyu.com/images/Url-Tok_p94qLttnmC.png)](https://gifyu.com/image/SSvu7)
