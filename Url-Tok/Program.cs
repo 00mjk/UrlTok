@@ -187,10 +187,38 @@ namespace Url_Tok
                         Utils.tiktokUrls.Add(url);
                     }
 
+                    Utils.tiktokUrls.Distinct().ToList();
+
                     foreach (string url in Utils.tiktokUrls)
                     {
                         Utils.UrlCount++;
-                        Console.Write("Currently converting url #{0}/{1}\r", Utils.UrlCount, Utils.tiktokUrls.Count.ToString());
+                        Console.Write("Currently converting url: {0}/{1}\r", Utils.UrlCount, Utils.tiktokUrls.Count.ToString());
+                        
+                        if (url.Contains(".com/@"))
+                        {
+                            string longCreator = url.Split(new string[]
+                            {
+                                ".com/@"
+                            }, StringSplitOptions.None)[1];
+
+                            if (longCreator.Contains("/video/")) {
+
+                                Utils.videoCreator = longCreator.Split(new string[]
+                                {
+                                    "/video/"
+                                }, StringSplitOptions.None)[0];
+                            }
+
+                            if (longCreator.Contains("/video/"))
+                            {
+
+                                Utils.videoID = longCreator.Split(new string[]
+                                {
+                                    "/video/"
+                                }, StringSplitOptions.None)[1];
+                            }
+
+                        }
                         Tikmate(url);
                     }
 
@@ -230,6 +258,7 @@ namespace Url_Tok
                 catch (Exception)
                 {
                     Thread.Sleep(5000);
+                    Tikmate(Url);
                 }
 
                 JObject jobj = JObject.Parse(Utils.tikmateRequest);
@@ -245,14 +274,32 @@ namespace Url_Tok
                     ".mp4?hd=1"
                 });
 
+                Console.WriteLine(tikUrl);
+
                 Parser(tikUrl);
             }
         }
 
         private static void Parser(string convert)
         {
+            var ctimeName = DateTime.Now.ToString("yyyy-MM-dd");
 
-            var parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + Utils.UrlCount + ".mp4";
+            var combined = string.Format("{0}-{1}-{2}", new object[]
+            {
+                ctimeName,
+                Utils.videoCreator,
+                Utils.videoID
+            });
+
+            if (combined.Contains("?is_copy_url=1&is_from_webapp=v1"))
+            {
+                combined = combined.Split(new string[]
+                {
+                    "?is_copy_url=1&is_from_webapp=v1"
+                }, StringSplitOptions.None)[0];
+            }
+
+            var parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + combined + ".mp4";
 
             using (var Client = new WebClient())
             {
@@ -272,6 +319,9 @@ namespace Url_Tok
             public static int toFilterCount = 0;
             public static int WashedCount = 0;
             public static int UrlCount = 0;
+
+            public static string videoCreator = string.Empty;
+            public static string videoID = string.Empty;
         }
     }
 }
