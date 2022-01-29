@@ -8,6 +8,8 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Console = Colorful.Console;
+using System.Drawing;
 
 /*                     
 
@@ -60,21 +62,51 @@ namespace Url_Tok
 
             Interface();
         }
+
+        public static void Design()
+        {
+            Console.WriteLine(@"  _   _      _ _____     _    ", Color.MediumPurple);
+            Console.WriteLine(@" | | | |_ __| |_   _|__ | | __", Color.MediumPurple);
+            Console.WriteLine(@" | | | | '__| | | |/ _ \| |/ /", Color.MediumPurple);
+            Console.WriteLine(@" | |_| | |  | | | | (_) |   < ", Color.MediumPurple);
+            Console.WriteLine(@"  \___/|_|  |_| |_|\___/|_|\_\", Color.MediumPurple);
+            Console.WriteLine(@"                              ", Color.MediumPurple);
+        }
+
         public static void Interface()
         {
-            Task.Factory.StartNew(delegate ()
-            {
-                Console.Title = String.Format("UrlTok by Avoidy - github.com/Avoidy - Avoidy#3443", new object[]
-                {
+            // Set main title
+            Console.Title = "UrlTok by Avoidy - github.com/Avoidy - Avoidy#3443";
 
-                });
-            });
+            // Design
+            Design();
 
-            Console.WriteLine("UrlTok by Avoidy\n");
-            Console.WriteLine("[1] Filter TikTok Urls");
-            Console.WriteLine("[2] Convert Tiktok Urls\n");
-            Console.Write("[OPTION] :: ");
-            int interOption = Convert.ToInt32(Console.ReadLine());
+            // Option 0
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("0", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" UrlTok Options\n", Color.White);
+
+            // Option 1
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("1", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" Filter to Urls\n", Color.White);
+
+            // Option 2
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("2", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" Convert to Mp4\n\n", Color.White);
+
+            //Option
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("OPTION", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" >> ", Color.White);
+
+
+            int interOption = Convert.ToInt32(Console.ReadLine()); // Option Input
 
             switch (interOption)
             {
@@ -169,7 +201,28 @@ namespace Url_Tok
         }
         public static void Converter()
         {
-            Console.WriteLine("UrlTok: Converting\n");
+
+            // Set title
+            Console.Title = "UrlTok by Avoidy - Module 2 - Convert to Mp4";
+            
+            //Design
+            Design();
+
+            // Module display
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("Module", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" >> 2\n", Color.White);
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("Description", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" >> Convert to Mp4\n", Color.White);
+
+            // File input
+            Console.Write("[", Color.MediumPurple);
+            Console.Write("Input", Color.White);
+            Console.Write("]", Color.MediumPurple);
+            Console.Write(" >> Please open your file!\n\n", Color.White);
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -187,13 +240,18 @@ namespace Url_Tok
                         Utils.tiktokUrls.Add(url);
                     }
 
-                    Utils.tiktokUrls.Distinct().ToList();
+                    Utils.tiktokUrls.Distinct().ToList(); // Removes duplicates
+                    Utils.tiktokUrls.Sort(); // Sort on user
+                    var urlsAmount = Utils.tiktokUrls.Count();
+
+                    Console.Write("Successfully loaded", Color.MediumPurple);
+                    Console.Write(" {0}", Color.White, urlsAmount);
+                    Console.Write(" valid TikTok urls!\n\n", Color.MediumPurple, urlsAmount);
 
                     foreach (string url in Utils.tiktokUrls)
                     {
                         Utils.UrlCount++;
-                        Console.Write("Currently converting url: {0}/{1}\r", Utils.UrlCount, Utils.tiktokUrls.Count.ToString());
-                        
+
                         if (url.Contains(".com/@"))
                         {
                             string longCreator = url.Split(new string[]
@@ -201,7 +259,8 @@ namespace Url_Tok
                                 ".com/@"
                             }, StringSplitOptions.None)[1];
 
-                            if (longCreator.Contains("/video/")) {
+                            if (longCreator.Contains("/video/"))
+                            {
 
                                 Utils.videoCreator = longCreator.Split(new string[]
                                 {
@@ -219,10 +278,21 @@ namespace Url_Tok
                             }
 
                         }
+
+                        Console.Write("Converting Url ", Color.White);
+                        Console.Write("[", Color.MediumPurple);
+                        Console.Write("{0}", Color.White, Utils.UrlCount);
+                        Console.Write("] ", Color.MediumPurple);
+                        Console.Write(" | ID:");
+                        Console.Write(" {0}\n", Color.MediumPurple, Utils.videoID);
+                        
                         Tikmate(url);
                     }
 
-                    Console.WriteLine("Done converting {0} urls!", Utils.tiktokUrls.Count.ToString());
+
+                    Console.Write("Done Converting", Color.White);
+                    Console.Write(" {0}", Color.MediumPurple, Utils.UrlCount);
+                    Console.Write(" urls!", Color.White);
                     Console.WriteLine("Press any key to return!");
                     Console.ReadKey();
                     Console.Clear();
@@ -258,7 +328,8 @@ namespace Url_Tok
                 catch (Exception)
                 {
                     Thread.Sleep(5000);
-                    Tikmate(Url);
+                    Console.WriteLine("[!] Api error! 5000ms timeout!", Color.Red);
+
                 }
 
                 JObject jobj = JObject.Parse(Utils.tikmateRequest);
@@ -274,7 +345,6 @@ namespace Url_Tok
                     ".mp4?hd=1"
                 });
 
-                Console.WriteLine(tikUrl);
 
                 Parser(tikUrl);
             }
@@ -284,9 +354,8 @@ namespace Url_Tok
         {
             var ctimeName = DateTime.Now.ToString("yyyy-MM-dd");
 
-            var combined = string.Format("{0}-{1}-{2}", new object[]
+            var combined = string.Format("{0}-{1}", new object[]
             {
-                ctimeName,
                 Utils.videoCreator,
                 Utils.videoID
             });
