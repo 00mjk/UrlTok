@@ -34,30 +34,29 @@ namespace Url_Tok
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\"))
             {
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\");
+            }
 
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\"))
-                {
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\"))
+            {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\");
 
-                }
+            }
 
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\"))
-                {
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\"))
+            {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\");
 
-                }
+            }
 
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\" + dirTime + @"\"))
-                {
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\" + dirTime + @"\");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\" + dirTime + @"\"))
+            {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Filtered\" + dirTime + @"\");
 
-                }
+            }
 
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\"))
-                {
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\");
-                }
-
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\"))
+            {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\");
             }
 
             Interface();
@@ -332,65 +331,71 @@ namespace Url_Tok
 
                 }
 
-                JObject jobj = JObject.Parse(Utils.tikmateRequest);
-                string tikToken = jobj.SelectToken("token").ToString();
-                string tikID = jobj.SelectToken("id").ToString();
+                // Console.WriteLine(Utils.tikmateRequest);
+/* 
+Example: 
+{"author_avatar":"https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/3c7d9b00a233621b6b70d3b39c7971c0~c5_1080x1080.webp?x-expires=1643580000\u0026x-signature=l%2FV2m%2BC%2FrliCQv%2F3Quvju%2FPPeso%3D","author_id":"_acyeast_","author_name":"AcyEast","comment_count":1110,"create_time":"Jun 2, 2021","id":"6968921591354821894","like_count":685761,"share_count":20063,"success":true,"token":"ctTtCeMOVb2KtzV7Fnv9_HjE5tvqqt3gmAd9_nTiJ7YUEFuTWaetr-BYJ5YgkJeMb_19jHX7MPov3zzR"}
+*/
 
-                string tikUrl = string.Concat(new string[]
-                {
-                    "https://tikmate.app/download/",
-                    tikToken,
-                    "/",
-                    tikID,
-                    ".mp4?hd=1"
-                });
+JObject jobj = JObject.Parse(Utils.tikmateRequest);
+string tikToken = jobj.SelectToken("token").ToString();
+string tikID = jobj.SelectToken("id").ToString();
+
+string tikUrl = string.Concat(new string[]
+{
+    "https://tikmate.app/download/",
+    tikToken,
+    "/",
+    tikID,
+    ".mp4?hd=1"
+});
 
 
-                Parser(tikUrl);
-            }
-        }
+Parser(tikUrl);
+}
+}
 
-        private static void Parser(string convert)
-        {
-            var ctimeName = DateTime.Now.ToString("yyyy-MM-dd");
+private static void Parser(string convert)
+{
+var ctimeName = DateTime.Now.ToString("yyyy-MM-dd");
 
-            var combined = string.Format("{0}-{1}", new object[]
-            {
-                Utils.videoCreator,
-                Utils.videoID
-            });
+var combined = string.Format("{0}-{1}", new object[]
+{
+Utils.videoCreator,
+Utils.videoID
+});
 
-            if (combined.Contains("?is_copy_url=1&is_from_webapp=v1"))
-            {
-                combined = combined.Split(new string[]
-                {
-                    "?is_copy_url=1&is_from_webapp=v1"
-                }, StringSplitOptions.None)[0];
-            }
+if (combined.Contains("?is_copy_url=1&is_from_webapp=v1"))
+{
+combined = combined.Split(new string[]
+{
+    "?is_copy_url=1&is_from_webapp=v1"
+}, StringSplitOptions.None)[0];
+}
 
-            var parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + combined + ".mp4";
+var parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + combined + ".mp4";
 
-            using (var Client = new WebClient())
-            {
-                Client.DownloadFile(convert, parseLocation); // Download the tiktok video
-                return;
-            }
-        }
+using (var Client = new WebClient())
+{
+Client.DownloadFile(convert, parseLocation); // Download the tiktok video
+return;
+}
+}
 
-        public static class Utils
-        {
-            public static string filterLoc = string.Empty;
-            public static string tikmateRequest = string.Empty;
-            public static List<string> toFilter = new List<string>();
-            public static List<string> Filtered = new List<string>();
-            public static List<string> Washed = new List<string>();
-            public static List<string> tiktokUrls = new List<string>();
-            public static int toFilterCount = 0;
-            public static int WashedCount = 0;
-            public static int UrlCount = 0;
+public static class Utils
+{
+public static string filterLoc = string.Empty;
+public static string tikmateRequest = string.Empty;
+public static List<string> toFilter = new List<string>();
+public static List<string> Filtered = new List<string>();
+public static List<string> Washed = new List<string>();
+public static List<string> tiktokUrls = new List<string>();
+public static int toFilterCount = 0;
+public static int WashedCount = 0;
+public static int UrlCount = 0;
 
-            public static string videoCreator = string.Empty;
-            public static string videoID = string.Empty;
-        }
-    }
+public static string videoCreator = string.Empty;
+public static string videoID = string.Empty;
+}
+}
 }
