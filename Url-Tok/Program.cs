@@ -348,6 +348,8 @@ namespace Url_Tok
                     JObject jobj = JObject.Parse(Utils.tikmateRequest);
                     string tikToken = jobj.SelectToken("token").ToString();
                     string tikID = jobj.SelectToken("id").ToString();
+                    Utils.tikDate = jobj.SelectToken("create_time").ToString();
+                    
 
                     Utils.tikUrl = string.Concat(new string[]
                     {
@@ -371,10 +373,11 @@ namespace Url_Tok
         {
             var ctimeName = DateTime.Now.ToString("yyyy-MM-dd");
 
-            var combined = string.Format("{0}-{1}", new object[]
+            var combined = string.Format("{0}-{1}-{2}", new object[]
             {
                 Utils.videoCreator,
-                Utils.videoID
+                Utils.videoID,
+                Utils.tikDate
             });
 
             if (combined.Contains("?is_copy_url=1&is_from_webapp=v1"))
@@ -409,6 +412,7 @@ namespace Url_Tok
             public static string videoCreator = string.Empty;
             public static string videoID = string.Empty;
             public static string tikUrl = string.Empty;
+            public static string tikDate = string.Empty;
         }
     }
 }
