@@ -388,11 +388,31 @@ namespace Url_Tok
                 }, StringSplitOptions.None)[0];
             }
 
-            var parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + combined + ".mp4";
+            bool dirsort = true;
+
+            if (dirsort == true)
+            {
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + Utils.videoCreator + @"\"))
+                {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + Utils.videoCreator + @"\");
+
+                }
+            }
+
+
+            if (dirsort == true)
+            {
+                Utils.parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + Utils.videoCreator + @"\" + combined + ".mp4";
+
+            } else
+            {
+                Utils.parseLocation = AppDomain.CurrentDomain.BaseDirectory + @"\TikTok\Converted\" + dirTime + @"\" + combined + ".mp4";
+            }
+            
 
             using (var Client = new WebClient())
             {
-                Client.DownloadFile(convert, parseLocation); // Download the tiktok video
+                Client.DownloadFile(convert, Utils.parseLocation); // Download the tiktok video
                 return;
             }
         }
@@ -413,6 +433,7 @@ namespace Url_Tok
             public static string videoID = string.Empty;
             public static string tikUrl = string.Empty;
             public static string tikDate = string.Empty;
+            public static string parseLocation = string.Empty;
         }
     }
 }
